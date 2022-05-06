@@ -27,8 +27,11 @@ class Solution {
         if(k==-1){
             return Bsearch(nums,target,0,nums.length-1);
         }
-        else{
-            return Math.max(Bsearch(nums,target,0,k),Bsearch(nums,target,k+1,nums.length-1));
-        } 
+        //else{
+            //return Math.max(Bsearch(nums,target,0,k),Bsearch(nums,target,k+1,nums.length-1));
+        //} 
+        if(nums[k]==target) return k;
+        if(nums[0]<=target) return Bsearch(nums,target,0,k-1);
+        return Bsearch(nums,target,k+1,nums.length-1);
     }
 }
