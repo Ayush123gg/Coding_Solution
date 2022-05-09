@@ -20,7 +20,7 @@ class Solution {
         int gap=0;
         int prv=min;
         for(int i=0;i<maxbuckt.length;i++){
-            if(maxbuckt[i]==Integer.MIN_VALUE) continue;
+            if(maxbuckt[i]==Integer.MIN_VALUE||minbuckt[i]==Integer.MAX_VALUE) continue;
             gap=Math.max(gap,minbuckt[i]-prv);
             prv=maxbuckt[i];
         }
