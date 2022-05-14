@@ -1,31 +1,30 @@
 class Solution {
     public int maximumGap(int[] nums) {
-        int min=Integer.MAX_VALUE,max=Integer.MIN_VALUE;
         if(nums.length<2) return 0;
-        for(int num:nums){//finding min max
-            if(min>num) min=num;
-            if(max<num) max=num;
-        }
-        int interval=(int)Math.ceil((max-min+0.0)/(nums.length-1));// calculating interval
-        int minbuckt[]=new int[nums.length-1];// creatin no. of bucket size array for storing only min value of particular index bucket
-        int maxbuckt[]=new int[nums.length-1];// creatin no. of bucket size array for storing only max value of particular index bucket
-        Arrays.fill(minbuckt,Integer.MAX_VALUE);
-        Arrays.fill(maxbuckt,Integer.MIN_VALUE);
+        int max=Integer.MIN_VALUE,min=Integer.MAX_VALUE;
         for(int num:nums){
-            if(num==min||num==max) continue;// we take min and max as seperate
-            int idx=(num-min)/(interval);
-            minbuckt[idx]=Math.min(minbuckt[idx],num);// storing min max 
-            maxbuckt[idx]=Math.max(maxbuckt[idx],num);
+            max=Math.max(num,max);
+            min=Math.min(num,min);
         }
-        int gap=0;
+        int interval=(int)Math.ceil((max-min+0.0)/(nums.length-1));
+        int maxBuck[]=new int[nums.length-1];
+        int minBuck[]=new int[nums.length-1];
+        Arrays.fill(maxBuck,Integer.MIN_VALUE);
+        Arrays.fill(minBuck,Integer.MAX_VALUE);
+        for(int i=0;i<nums.length;i++){
+            if(nums[i]==min||nums[i]==max) continue;
+            int place=(nums[i]-min)/(interval);
+            maxBuck[place]=Math.max(nums[i],maxBuck[place]);
+            minBuck[place]=Math.min(nums[i],minBuck[place]);
+        }
         int prv=min;
-        for(int i=0;i<maxbuckt.length;i++){
-            if(maxbuckt[i]==Integer.MIN_VALUE||minbuckt[i]==Integer.MAX_VALUE) continue;//bucket[i] doesn't contains element 
-            gap=Math.max(gap,minbuckt[i]-prv);// finding max gap
-            prv=maxbuckt[i];
+        int gap=0;
+        for(int i=0;i<nums.length-1;i++){
+            if(maxBuck[i]==Integer.MIN_VALUE) continue;
+            gap=Math.max(gap,minBuck[i]-prv);
+            prv=maxBuck[i];
         }
-        gap=Math.max(gap,max-prv);// for max element
-        //TC :- O(n+n+n+n+n)--> O(n)
+        gap=Math.max(gap,max-prv);
         return gap;
     }
 }
