@@ -1,45 +1,33 @@
 class Solution {
-    static int preSumMaxSum(int[][] arr,int tar){
-        int maxSum=Integer.MIN_VALUE;
-        int n=arr.length;
-        int m=arr[0].length;
+    public int numSubmatrixSumTarget(int[][] matrix, int target) {
+        int n=matrix.length;
+        int m=matrix[0].length;
         for(int i=0;i<n;i++){
             for(int j=1;j<m;j++){
-                arr[i][j]=arr[i][j-1]+arr[i][j];
+                matrix[i][j]+=matrix[i][j-1];
             }
         }
-        /* for (int[] ints : arr) {
-            System.out.println(Arrays.toString(ints));
-        }*/
-        for(int i=0;i<m;i++){
-            for(int j=1;j<n;j++){
-                arr[j][i]=arr[j-1][i]+arr[j][i];
-            }
-        }
-        int c=0;
-        for(int top=0;top<n;top++){
-            for(int left=0;left<m;left++){
-                for(int botom=top;botom<n;botom++){
-                    for(int right=left;right<m;right++){
-                        int sum=0;
-                        // Using prefix Sum--O(1)
-                        if(top>0&&left>0){
-                        sum=arr[botom][right]-arr[top-1][right]-arr[botom][left-1]+arr[top-1][left-1];}
-                        else if(top>0){
-                            sum=arr[botom][right]-arr[top-1][right];
-                        }else if(left>0){
-                            sum=arr[botom][right]-arr[botom][left-1];
-                        }else {
-                            sum =arr[botom][right];
-                        }
-                        if(sum==tar) c++;
+        HashMap<Integer,Integer> hm=new HashMap<Integer,Integer>();
+        
+        int ans=0;
+        for(int start=0;start<m;start++){
+            for(int end=start;end<m;end++){
+                int sum=0;
+                hm.clear();
+                hm.put(0,1);
+                for(int i=0;i<n;i++){
+                    int cur=matrix[i][end];
+                    if(start>0){
+                        cur-=matrix[i][start-1];
                     }
+                    sum+=cur;
+                    if(hm.containsKey(sum-target)){
+                        ans+=hm.get(sum-target);
+                    }
+                    hm.put(sum,hm.getOrDefault(sum,0)+1);
                 }
             }
         }
-        return c;
-    }
-    public int numSubmatrixSumTarget(int[][] matrix, int target) {
-        return preSumMaxSum(matrix,target);
+        return ans;
     }
 }
